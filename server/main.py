@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
+from datetime import datetime, timedelta
 from pydantic import BaseModel
 from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders
 
@@ -89,6 +90,8 @@ class DemandForecast(BaseModel):
     forecasted_demand: int
     trend: str
     period: str
+    unit_cost: float
+    lead_time_days: int
 
 class BacklogItem(BaseModel):
     id: str
@@ -119,6 +122,17 @@ class CreatePurchaseOrderRequest(BaseModel):
     unit_cost: float
     expected_delivery_date: str
     notes: Optional[str] = None
+
+class CreateOrderItem(BaseModel):
+    sku: str
+    name: str
+    quantity: int
+    unit_price: float
+    lead_time_days: Optional[int] = 7
+
+class CreateOrderRequest(BaseModel):
+    customer: str
+    items: List[CreateOrderItem]
 
 # API endpoints
 @app.get("/")
@@ -160,6 +174,47 @@ def get_order(order_id: str):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
+
+@app.post("/api/orders", response_model=Order, status_code=201)
+def create_order(payload: CreateOrderRequest):
+    """Create a restocking order.
+
+    Appends a new order (status "Submitted") in place to the in-memory `orders` list.
+    Like all mock data in this app, it is not persisted and resets on server restart.
+    `expected_delivery` is derived from the longest line-item lead time so the Orders
+    tab can display a delivery lead time without changing the Order schema.
+    """
+    if not payload.items:
+        raise HTTPException(status_code=422, detail="Order must contain at least one item")
+
+    now = datetime.now().replace(microsecond=0)
+
+    # Generate the next id / order number from the existing in-memory orders
+    new_id = str(max((int(o["id"]) for o in orders), default=0) + 1)
+    next_num = max((int(o["order_number"].rsplit("-", 1)[-1]) for o in orders), default=0) + 1
+
+    total_value = round(sum(i.quantity * i.unit_price for i in payload.items), 2)
+    # Delivery lead time for the whole order = the slowest item to arrive
+    max_lead = max((i.lead_time_days or 0) for i in payload.items) or 7
+
+    new_order = {
+        "id": new_id,
+        "order_number": f"ORD-{now.year}-{next_num:04d}",
+        "customer": payload.customer,
+        "items": [i.model_dump() for i in payload.items],
+        "status": "Submitted",
+        "order_date": now.isoformat(),
+        "expected_delivery": (now + timedelta(days=max_lead)).isoformat(),
+        "total_value": total_value,
+        "actual_delivery": None,
+        "warehouse": None,
+        "category": None,
+    }
+
+    # In-place mutation so `mock_data.orders` (same list object) also sees the new order.
+    # Never rebind `orders` here - it would break the shared reference.
+    orders.insert(0, new_order)
+    return new_order
 
 @app.get("/api/demand", response_model=List[DemandForecast])
 def get_demand_forecasts():
