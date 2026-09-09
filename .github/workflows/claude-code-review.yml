@@ -24,10 +24,18 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            Review this pull request for the Factory Inventory Management System
-            (Vue 3 + Composition API frontend, FastAPI backend, in-memory mock data).
+            Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}
+            for the Factory Inventory Management System (Vue 3 + Composition API
+            frontend, FastAPI backend, in-memory mock data).
+
             Focus on: correctness bugs, Vue reactivity pitfalls, v-for keys using
             stable identifiers, date validation before .getMonth() calls, Pydantic
             models matching the JSON data structure, and adherence to the patterns
-            documented in CLAUDE.md. Leave inline comments on specific lines.
-            Be concise and only flag real issues.
+            documented in CLAUDE.md.
+
+            Post a concise top-level summary with `gh pr comment` and leave
+            inline comments on specific lines with the inline-comment tool.
+            Only flag real issues; if the PR looks good, say so briefly.
+          # Grant the tools Claude needs to read the diff and post its review.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"
