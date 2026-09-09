@@ -6,6 +6,7 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -106,12 +107,14 @@ export default {
     title: '注文',
     description: '顧客注文の表示と管理',
     allOrders: 'すべての注文',
+    submittedOrders: '送信済み注文',
     totalOrders: '総注文数',
     totalRevenue: '総収益',
     avgOrderValue: '平均注文額',
     onTimeDelivery: '定時配達',
     itemsCount: '{count}件',
     quantity: '数量',
+    leadTimeDays: '{count}日',
     table: {
       orderNumber: '注文番号',
       orderId: '注文ID',
@@ -125,7 +128,8 @@ export default {
       totalValue: '合計金額',
       status: 'ステータス',
       expectedDelivery: '予定配達日',
-      actualDelivery: '実際の配達日'
+      actualDelivery: '実際の配達日',
+      leadTime: '納品リードタイム'
     }
   },
 
@@ -188,6 +192,43 @@ export default {
     }
   },
 
+  // Restocking
+  restocking: {
+    title: '補充',
+    description: '予算を設定し、需要予測から補充の推奨を取得します',
+    budgetLabel: '利用可能な予算',
+    budgetHelp: 'ドラッグして予算を設定します。推奨はリアルタイムで更新されます。金額はUSDです。',
+    recommendedTitle: '推奨補充',
+    itemsSelected: '選択品目数',
+    totalCost: '合計コスト',
+    budgetRemaining: '残り予算',
+    longestLeadTime: '最長リードタイム',
+    leadTimeDays: '{count}日',
+    table: {
+      sku: 'SKU',
+      itemName: '品目名',
+      trend: 'トレンド',
+      shortfall: '予測不足',
+      orderQty: '発注数量',
+      unitCost: '単価',
+      lineCost: '品目コスト',
+      leadTime: 'リードタイム'
+    },
+    partial: '一部',
+    excludedTitle: '予算外',
+    excludedReason: '予算超過',
+    placeOrder: '発注する',
+    confirmOrder: '発注を確定',
+    confirmPrompt: '{count}品目、合計{total}の補充注文を送信しますか？',
+    cancel: 'キャンセル',
+    submitting: '送信中...',
+    successMessage: '注文{orderNumber}を送信しました。',
+    viewInOrders: '注文で表示',
+    startAnother: 'もう一度',
+    emptyState: 'この予算内に収まる品目がありません。予算を増やして推奨を表示してください。',
+    noShortfall: '現在の予測に予測不足はありません。'
+  },
+
   // Filters
   filters: {
     timePeriod: '期間',
@@ -204,6 +245,7 @@ export default {
     shipped: '出荷済み',
     processing: '処理中',
     backordered: 'バックオーダー',
+    submitted: '送信済み',
     inStock: '在庫あり',
     lowStock: '在庫僅少',
     adequate: '適量'

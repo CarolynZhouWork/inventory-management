@@ -6,6 +6,7 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -106,12 +107,14 @@ export default {
     title: 'Orders',
     description: 'View and manage customer orders',
     allOrders: 'All Orders',
+    submittedOrders: 'Submitted Orders',
     totalOrders: 'Total Orders',
     totalRevenue: 'Total Revenue',
     avgOrderValue: 'Avg Order Value',
     onTimeDelivery: 'On-Time Delivery',
     itemsCount: '{count} items',
     quantity: 'Qty',
+    leadTimeDays: '{count} days',
     table: {
       orderNumber: 'Order Number',
       orderId: 'Order ID',
@@ -125,7 +128,8 @@ export default {
       totalValue: 'Total Value',
       status: 'Status',
       expectedDelivery: 'Expected Delivery',
-      actualDelivery: 'Actual Delivery'
+      actualDelivery: 'Actual Delivery',
+      leadTime: 'Delivery Lead Time'
     }
   },
 
@@ -188,6 +192,43 @@ export default {
     }
   },
 
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    description: 'Set a budget and get restock recommendations from the demand forecast',
+    budgetLabel: 'Available Budget',
+    budgetHelp: 'Drag to set your budget. Recommendations update live. Amounts are in USD.',
+    recommendedTitle: 'Recommended Restock',
+    itemsSelected: 'Items Selected',
+    totalCost: 'Total Cost',
+    budgetRemaining: 'Budget Remaining',
+    longestLeadTime: 'Longest Lead Time',
+    leadTimeDays: '{count} days',
+    table: {
+      sku: 'SKU',
+      itemName: 'Item Name',
+      trend: 'Trend',
+      shortfall: 'Projected Shortfall',
+      orderQty: 'Order Qty',
+      unitCost: 'Unit Cost',
+      lineCost: 'Line Cost',
+      leadTime: 'Lead Time'
+    },
+    partial: 'Partial',
+    excludedTitle: "Didn't Make the Cut",
+    excludedReason: 'Over budget',
+    placeOrder: 'Place Order',
+    confirmOrder: 'Confirm Order',
+    confirmPrompt: 'Submit a restock order for {count} items totaling {total}?',
+    cancel: 'Cancel',
+    submitting: 'Submitting...',
+    successMessage: 'Order {orderNumber} submitted.',
+    viewInOrders: 'View in Orders',
+    startAnother: 'Start another',
+    emptyState: 'No items fit within this budget. Increase the budget to see recommendations.',
+    noShortfall: 'No projected shortfall in the current forecast.'
+  },
+
   // Filters
   filters: {
     timePeriod: 'Time Period',
@@ -204,6 +245,7 @@ export default {
     shipped: 'Shipped',
     processing: 'Processing',
     backordered: 'Backordered',
+    submitted: 'Submitted',
     inStock: 'In Stock',
     lowStock: 'Low Stock',
     adequate: 'Adequate'
